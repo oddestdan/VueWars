@@ -11,13 +11,14 @@ export default new Router({
     {
       path: '/',
       name: 'movie-list',
-      component: MovieList
+      component: MovieList,
+      alias: '/list'
     },
     {
-      path: '/movie/:moviename',
+      path: '/movie/:id',
       name: 'movie-show',
       component: MovieShow,
-      props: true // params are sent as props, instead of being sent in router-link
+      props: true // params are received as props
     }
   ]
 })
