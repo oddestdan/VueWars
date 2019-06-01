@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="movie-list">
     <h1>Star Wars Filmography</h1>
     <MovieCard v-for="movie in movies" :movie="movie" :key="movie.episode_id" />
     <!-- <router-link :to="{ name: 'movie-show', params: { id: '2' } }" -->
@@ -13,6 +13,8 @@ import MovieCard from '@/components/MovieCard.vue'
 import MovieService from '@/services/MovieService.js'
 
 export default {
+  name: 'movie-list',
+
   components: {
     MovieCard
   },
