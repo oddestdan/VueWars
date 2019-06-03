@@ -29,13 +29,10 @@ export default {
     MovieService.getSpecie(this.id)
       .then(response => {
         this.specie = response.data
-        console.log(this.specie)
+        // console.log(this.specie)
       })
       .catch(error => {
-        console.log(
-          'There was an error in SpecieShow API call: ',
-          error.response
-        )
+        console.log('There was an error in SpecieShow API call: ', error)
       })
   }
 }

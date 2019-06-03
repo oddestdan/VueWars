@@ -15,20 +15,21 @@
       <li>
         <PlanetCard
           v-for="(planet, i) in planets"
-          :planet="planet"
-          :id="movie.planets[i].match(/\d/g).join('')"
+          :planet="planet.data"
+          :id="planet.id"
           :key="`planet_${i}`"
         />
       </li>
     </ul>
 
+    <!-- TODO: fix species index sent for api call -->
     <h3>Species</h3>
     <ul>
       <li>
         <SpecieCard
           v-for="(specie, i) in species"
-          :specie="specie"
-          :id="movie.species[i].match(/\d/g).join('')"
+          :specie="specie.data"
+          :id="specie.id"
           :key="`specie_${i}`"
         />
       </li>
@@ -37,27 +38,27 @@
     <h3>Characters</h3>
     <ul>
       <li v-for="(char, i) in movie.characters" :key="`char_${i}`">
-        <a :href="`/characters/${i}`">
-          Character {{ char.match(/\d/g).join('') }}
-        </a>
+        <a :href="`/characters/${i}`"
+          >Character {{ char.match(/\d/g).join('') }}</a
+        >
       </li>
     </ul>
 
     <h3>Starships</h3>
     <ul>
       <li v-for="(ship, i) in movie.starships" :key="`ship_${i}`">
-        <a :href="`/starships/${i}`">
-          Starship {{ ship.match(/\d/g).join('') }}
-        </a>
+        <a :href="`/starships/${i}`"
+          >Starship {{ ship.match(/\d/g).join('') }}</a
+        >
       </li>
     </ul>
 
     <h3>Vehicles</h3>
     <ul>
       <li v-for="(vehicle, i) in movie.vehicles" :key="`vehicle_${i}`">
-        <a :href="`/vehicles/${i}`">
-          Vehicle {{ vehicle.match(/\d/g).join('') }}
-        </a>
+        <a :href="`/vehicles/${i}`"
+          >Vehicle {{ vehicle.match(/\d/g).join('') }}</a
+        >
       </li>
     </ul>
   </div>
@@ -97,13 +98,16 @@ export default {
         this.movie.planets.forEach(planet => {
           MovieService.getPlain(planet)
             .then(response => {
-              this.planets.push(response.data)
-              // console.log('>>Getting a planet called ' + response.data.name)
+              let id = response.data.url.match(/\d/g).join('')
+              this.planets.push({
+                id: id,
+                data: response.data
+              })
             })
             .catch(error => {
               console.log(
                 'There was an error in MovieShow Planet API call: ',
-                error.response
+                error
               )
             })
         })
@@ -112,22 +116,22 @@ export default {
         this.movie.species.forEach(specie => {
           MovieService.getPlain(specie)
             .then(response => {
-              this.species.push(response.data)
-              // console.log('>>Getting a specie called ' + response.data.name)
+              let id = response.data.url.match(/\d/g).join('')
+              this.species.push({
+                id: id,
+                data: response.data
+              })
             })
             .catch(error => {
               console.log(
                 'There was an error in MovieShow Species API call: ',
-                error.response
+                error
               )
             })
         })
       })
       .catch(error => {
-        console.log(
-          'There was an error in MovieShow Movie API call: ',
-          error.response
-        )
+        console.log('There was an error in MovieShow Movie API call: ', error)
       })
   },
 

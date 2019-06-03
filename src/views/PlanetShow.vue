@@ -39,13 +39,10 @@ export default {
     MovieService.getPlanet(this.id)
       .then(response => {
         this.planet = response.data
-        console.log(this.planet)
+        // console.log(this.planet)
       })
       .catch(error => {
-        console.log(
-          'There was an error in PlanetShow API call: ',
-          error.response
-        )
+        console.log('There was an error in PlanetShow API call: ', error)
       })
   }
 }

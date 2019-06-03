@@ -32,6 +32,7 @@
 p,
 ul {
   padding-inline-start: 40px;
+  padding-inline-end: 40px;
 }
 a {
   font-weight: bold;
