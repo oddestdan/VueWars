@@ -1,7 +1,7 @@
 <template>
   <router-link
     class="specie-link"
-    :to="{ name: 'specie-show', params: { id: this.id } }"
+    :to="{ name: 'specie-show', params: { id } }"
   >
     <div class="specie-card">
       <a>{{ specie.name }}</a>

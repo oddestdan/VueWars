@@ -1,16 +1,20 @@
 <template>
   <div class="movie-list">
     <h1>Star Wars Filmography</h1>
-    <MovieCard v-for="movie in movies" :movie="movie" :key="movie.episode_id" />
-    <!-- <router-link :to="{ name: 'movie-show', params: { id: '2' } }" -->
-    <!-- >Show Old Republic</router-link -->
-    <!-- > -->
+    <MovieCard
+      v-for="(movie, i) in movies"
+      :movie="movie.data"
+      :id="movie.id"
+      :key="`movie_${i}`"
+    />
   </div>
 </template>
 
 <script>
 import MovieCard from '@/components/MovieCard.vue'
 import MovieService from '@/services/MovieService.js'
+
+// import store from '@/store.js'
 
 export default {
   name: 'movie-list',
@@ -28,8 +32,21 @@ export default {
   created() {
     MovieService.getMovies()
       .then(response => {
-        this.movies = response.data.results
+        this.movies = response.data.results.map(movie => {
+          return (movie = {
+            id: movie.url.match(/\d/g).join(''),
+            data: movie
+          })
+        })
+
+        // this.movies.forEach(movie => {
+        // if (movie.id !== )
+        // store.commit('ADD_MOVIE', movie)
+        // })
+
+        console.log('outputting movies')
         console.log(this.movies)
+        // console.log(store.state.movies)
       })
       .catch(error => {
         console.log(

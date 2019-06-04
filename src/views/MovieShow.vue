@@ -69,6 +69,10 @@ import PlanetCard from '@/components/PlanetCard.vue'
 import SpecieCard from '@/components/SpecieCard.vue'
 import MovieService from '@/services/MovieService.js'
 
+// function pushFromAxios(arr, resp) {
+//   arr.push({ id: resp.data.url.match(/\d/g).join(''), data: resp.data })
+// }
+
 export default {
   name: 'movie-show',
 
@@ -92,6 +96,7 @@ export default {
       .then(response => {
         this.movie = response.data
         // console.log('>Getting a movie id #' + response.data.episode_id)
+        console.log(`>Getting #${this.movie.episode_id}: ${this.movie.title}`)
         console.log(this.movie)
 
         // arrange a planets call after movie call
@@ -104,6 +109,7 @@ export default {
                 data: response.data
               })
             })
+            // .then(pushFromAxios(this.planets, response))
             .catch(error => {
               console.log(
                 'There was an error in MovieShow Planet API call: ',

@@ -1,16 +1,10 @@
 <template>
-  <router-link
-    class="movie-link"
-    :to="{ name: 'movie-show', params: { id: movie.episode_id } }"
-  >
+  <router-link class="movie-link" :to="{ name: 'movie-show', params: { id } }">
     <div class="movie-card -shadow">
       <span class="movie-release-date">
         {{ movie.release_date.substring(0, movie.release_date.indexOf('-')) }}
       </span>
       <h2>{{ movie.title }}</h2>
-      <!-- <span class="eyebrow">@{{ movie.time }} on {{ movie.date }}</span> -->
-      <!-- <h4 class="title">{{ movie.title }}</h4> -->
-      <!-- <BaseIcon name="users">{{ movie.attendees.length }} attending</BaseIcon> -->
     </div>
   </router-link>
 </template>
@@ -20,7 +14,8 @@ export default {
   name: 'movie-card',
 
   props: {
-    movie: Object
+    movie: Object,
+    id: String
   }
 }
 </script>
