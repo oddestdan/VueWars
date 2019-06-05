@@ -1,5 +1,7 @@
 <template>
   <div class="movie-show">
+    <!-- <h5>ID is {{ movie.url.match(/\d/g).join('') }}</h5> -->
+    <h3>ID is {{ movie.url }}</h3>
     <h1>Episode #{{ movie.episode_id }} - {{ movie.title }}</h1>
     <div class="main-info">
       <h4>Director: {{ movie.director }}</h4>
@@ -22,7 +24,6 @@
       </li>
     </ul>
 
-    <!-- TODO: fix species index sent for api call -->
     <h3>Species</h3>
     <ul>
       <li>
@@ -95,17 +96,15 @@ export default {
     MovieService.getMovie(this.id)
       .then(response => {
         this.movie = response.data
-        // console.log('>Getting a movie id #' + response.data.episode_id)
-        console.log(`>Getting #${this.movie.episode_id}: ${this.movie.title}`)
-        console.log(this.movie)
+        let id = this.movie.url.match(/\d/g).join('')
+        console.log(`> MS id: ${id} - ${this.movie.title}`)
 
-        // arrange a planets call after movie call
+        // arrange planets call after movie call
         this.movie.planets.forEach(planet => {
           MovieService.getPlain(planet)
             .then(response => {
-              let id = response.data.url.match(/\d/g).join('')
               this.planets.push({
-                id: id,
+                id: response.data.url.match(/\d/g).join(''),
                 data: response.data
               })
             })
@@ -118,13 +117,12 @@ export default {
             })
         })
 
-        // arrange a species call after movie call
+        // arrange species call after movie call
         this.movie.species.forEach(specie => {
           MovieService.getPlain(specie)
             .then(response => {
-              let id = response.data.url.match(/\d/g).join('')
               this.species.push({
-                id: id,
+                id: response.data.url.match(/\d/g).join(''),
                 data: response.data
               })
             })
@@ -139,25 +137,6 @@ export default {
       .catch(error => {
         console.log('There was an error in MovieShow Movie API call: ', error)
       })
-  },
-
-  methods: {
-    getPlanetsFromThis() {
-      this.movie.planets.forEach(planetURL => {
-        MovieService.getPlainPlanet(planetURL)
-          .then(response => {
-            this.planets.push(response.data)
-            console.log('  Pushing planet...')
-            console.log(response.data)
-          })
-          .catch(error => {
-            console.log(
-              'There was an error in gettingPlainPlanets: ',
-              error.response
-            )
-          })
-      })
-    }
   }
 }
 </script>

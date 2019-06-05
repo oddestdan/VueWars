@@ -3,8 +3,8 @@
     <h1>Star Wars Filmography</h1>
     <MovieCard
       v-for="(movie, i) in movies"
-      :movie="movie.data"
-      :id="movie.id"
+      :movie="movie"
+      :id="getIDbyURL(movie.url)"
       :key="`movie_${i}`"
     />
   </div>
@@ -12,9 +12,7 @@
 
 <script>
 import MovieCard from '@/components/MovieCard.vue'
-import MovieService from '@/services/MovieService.js'
-
-// import store from '@/store.js'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'movie-list',
@@ -23,37 +21,14 @@ export default {
     MovieCard
   },
 
-  data() {
-    return {
-      movies: []
-    }
+  computed: {
+    ...mapState(['movies']),
+    ...mapGetters(['getIDbyURL', 'getMovieByID', 'getAllSpecieIDs'])
   },
 
-  created() {
-    MovieService.getMovies()
-      .then(response => {
-        this.movies = response.data.results.map(movie => {
-          return (movie = {
-            id: movie.url.match(/\d/g).join(''),
-            data: movie
-          })
-        })
-
-        // this.movies.forEach(movie => {
-        // if (movie.id !== )
-        // store.commit('ADD_MOVIE', movie)
-        // })
-
-        console.log('outputting movies')
-        console.log(this.movies)
-        // console.log(store.state.movies)
-      })
-      .catch(error => {
-        console.log(
-          'There was an error in MovieList API call: ',
-          error.response
-        )
-      })
+  async created() {
+    console.log('dispatching getMovies...')
+    this.$store.dispatch('getMovies')
   }
 }
 </script>
