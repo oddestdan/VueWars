@@ -23,12 +23,11 @@ export default {
 
   computed: {
     ...mapState(['movies']),
-    ...mapGetters(['getIDbyURL', 'getMovieByID', 'getAllSpecieIDs'])
+    ...mapGetters(['getIDbyURL'])
   },
 
   async created() {
-    console.log('dispatching getMovies...')
-    this.$store.dispatch('getMovies')
+    if (this.movies.length === 0) this.$store.dispatch('getMovies')
   }
 }
 </script>

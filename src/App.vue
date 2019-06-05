@@ -18,17 +18,7 @@
 #nav {
   padding: 30px;
   text-align: center;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
-// h1, h2, h3, h4, h5, h6 {
-// margin-left: 30px;
-// }
 p,
 ul {
   padding-inline-start: 40px;
