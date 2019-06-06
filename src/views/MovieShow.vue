@@ -14,7 +14,7 @@
     <ul>
       <li>
         <PlanetCard
-          v-for="(planet, i) in localPlanets"
+          v-for="(planet, i) in filteredPlanets"
           :planet="planet"
           :id="getIDbyURL(planet.url)"
           :key="`planet_${i}`"
@@ -26,7 +26,7 @@
     <ul>
       <li>
         <SpecieCard
-          v-for="(specie, i) in localSpecies"
+          v-for="(specie, i) in filteredSpecies"
           :specie="specie"
           :id="getIDbyURL(specie.url)"
           :key="`specie_${i}`"
@@ -80,10 +80,7 @@ export default {
 
   data() {
     return {
-      movie: {},
-      localPlanets: [],
-      localSpecies: []
-      // movie: this.movies.getMovieByID(this.movie.url)
+      movie: {}
     }
   },
 
@@ -96,49 +93,43 @@ export default {
       'getAllSpecieIDs',
       'getPlanetsByIDs',
       'getSpeciesByIDs'
-    ])
+    ]),
+    // movie() {
+    // return this.getMovieByID(this.id)
+    // },
+    filteredPlanets() {
+      // all current movie's planet IDs
+      let planetsIDs = this.movie.planets.map(url => this.getIDbyURL(url))
+      return this.planets.filter(planet =>
+        planetsIDs.includes(this.getIDbyURL(planet.url))
+      )
+    },
+    filteredSpecies() {
+      // all current movie's species IDs
+      let speciesIDs = this.movie.species.map(url => this.getIDbyURL(url))
+      return this.species.filter(specie =>
+        speciesIDs.includes(this.getIDbyURL(specie.url))
+      )
+    }
   },
 
   async created() {
+    console.log(this.$store)
     if (this.movies.length === 0) this.$store.dispatch('getMovies')
 
     this.movie = this.getMovieByID(this.id)
-    console.log(this.movie)
+    // console.log(this.movie)
 
-    let planetsIDs = this.movie.planets.map(url => this.getIDbyURL(url))
-    let speciesIDs = this.movie.species.map(url => this.getIDbyURL(url))
+    let planetsIDs = this.movie.planets
+      .map(url => this.getIDbyURL(url))
+      .filter(id => !this.getAllPlanetIDs.includes(Number(id)))
 
-    console.log(planetsIDs)
-    planetsIDs = planetsIDs.filter(
-      id => !this.getAllPlanetIDs.includes(Number(id))
-    )
-    console.log(planetsIDs)
-
-    console.log(speciesIDs)
-    speciesIDs = speciesIDs.filter(
-      id => !this.getAllSpecieIDs.includes(Number(id))
-    )
-    console.log(speciesIDs)
+    let speciesIDs = this.movie.species
+      .map(url => this.getIDbyURL(url))
+      .filter(id => !this.getAllSpecieIDs.includes(Number(id)))
 
     if (planetsIDs.length !== 0) this.$store.dispatch('getPlanets', planetsIDs)
     if (speciesIDs.length !== 0) this.$store.dispatch('getSpecies', speciesIDs)
-
-    // AT THIS POINT PLANETS/SPECIES IN STORE ARE NOT YET UPDATED
-
-    planetsIDs = this.movie.planets.map(url => this.getIDbyURL(url))
-    speciesIDs = this.movie.species.map(url => this.getIDbyURL(url))
-
-    this.localPlanets =
-      this.planets.length !== 0
-        ? [...this.getPlanetsByIDs(planetsIDs)]
-        : this.planets
-    console.log(this.localPlanets)
-
-    this.localSpecies =
-      this.species.length !== 0
-        ? [...this.getSpeciesByIDs(speciesIDs)]
-        : this.species
-    console.log(this.localSpecies)
   }
 }
 </script>

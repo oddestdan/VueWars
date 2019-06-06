@@ -17,6 +17,7 @@ export default new Vuex.Store({
     planets: [],
     species: []
   },
+
   getters: {
     getMovieByID: state => id =>
       state.movies.find(movie => URLtoID(movie.url) === id),
@@ -46,6 +47,7 @@ export default new Vuex.Store({
     getAllSpecieIDs: state =>
       state.species.map(specie => Number(URLtoID(specie.url)))
   },
+
   mutations: {
     setMovies: (state, payload) => (state.movies = payload),
     setPlanets: (state, payload) =>
@@ -53,6 +55,7 @@ export default new Vuex.Store({
     setSpecies: (state, payload) =>
       (state.species = [...state.species, ...payload])
   },
+
   actions: {
     async getMovies({ commit }) {
       console.log('dispatching getMovies...')
