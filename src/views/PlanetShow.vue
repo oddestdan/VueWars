@@ -9,40 +9,36 @@
       <h4>Rotation period: {{ planet.rotation_period }}</h4>
       <h4>Orbital period: {{ planet.orbital_period }}</h4>
     </div>
-
-    <h3>Residents</h3>
+    <!-- <h3>Residents</h3>
     <ul>
       <li v-for="(resident, i) in planet.residents" :key="`resident_${i}`">
         <a :href="`/residents/${i}`">
           Resident {{ resident.match(/\d/g).join('') }}
         </a>
       </li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
 <script>
-import MovieService from '@/services/MovieService.js'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'planet-show',
 
   props: ['id'],
 
-  data() {
-    return {
-      planet: {}
+  computed: {
+    ...mapState(['planets']),
+    ...mapGetters(['getPlanetByID', 'getAllPlanetsByIDs']),
+    planet() {
+      return this.getPlanetByID(this.id)
     }
   },
 
-  created() {
-    MovieService.getPlanet(this.id)
-      .then(response => {
-        this.planet = response.data
-      })
-      .catch(error => {
-        console.log('There was an error in PlanetShow API call: ', error)
-      })
+  async created() {
+    if (this.planet === undefined)
+      await this.$store.dispatch('getPlanets', [this.id])
   }
 }
 </script>

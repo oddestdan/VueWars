@@ -19,6 +19,8 @@ export default new Vuex.Store({
   },
 
   getters: {
+    getIDbyURL: () => url => URLtoID(url),
+
     getMovieByID: state => id =>
       state.movies.find(movie => URLtoID(movie.url) === id),
     getPlanetByID: state => id =>
@@ -27,23 +29,12 @@ export default new Vuex.Store({
       state.species.find(specie => URLtoID(specie.url) === id),
 
     getPlanetsByIDs: state => ids =>
-      // state.planets.filter(planet => ids.includes(URLtoID(planet.url))),
-      state.planets.filter(planet => {
-        console.log(`  planet --- ${planet.name}`)
-        for (let id of ids) {
-          console.log(`    id --- ${id}`)
-          if (URLtoID(planet.url) === id) return true
-        }
-        return false
-      }),
+      state.planets.filter(planet => ids.includes(URLtoID(planet.url))),
     getSpeciesByIDs: state => ids =>
       state.species.filter(specie => ids.includes(URLtoID(specie.url))),
 
-    getIDbyURL: () => url => URLtoID(url),
-
     getAllPlanetIDs: state =>
       state.planets.map(planet => Number(URLtoID(planet.url))),
-
     getAllSpecieIDs: state =>
       state.species.map(specie => Number(URLtoID(specie.url)))
   },
@@ -58,35 +49,41 @@ export default new Vuex.Store({
 
   actions: {
     async getMovies({ commit }) {
-      console.log('dispatching getMovies...')
+      console.log('~ dispatching getMovies...')
       // const { data: { results } } = await axios...
       const movies = await MovieService.getMovies().catch(error => {
-        console.log('Error in getMovies API call: ', error)
+        console.error('Error in getMovies API call: ', error)
       })
       for (let movie of movies.data.results)
-        console.log(`id: ${movie.url.slice(-2)[0]} - ${movie.title}`)
+        console.log(`movie id: ${movie.url.slice(-2)[0]} - ${movie.title}`)
 
       commit('setMovies', movies.data.results)
     },
 
     async getPlanets({ commit }, planetsIDs) {
-      console.log('dispatching getPlanets...')
+      console.log('~ dispatching getPlanets...')
       const planets = await map(planetsIDs, async id => {
-        // TODO: remake using MovieService
-        const response = await fetch(`https://swapi.co/api/planets/${id}/`)
-        return response.json()
+        const { data } = await MovieService.getPlanet(id).catch(error => {
+          console.error('Error in getPlanets API call: ', error)
+        })
+        console.log(` planet id: ${data.url.slice(-2)[0]} - ${data.name}`)
+        return data
       })
       commit('setPlanets', planets)
     },
 
     async getSpecies({ commit }, speciesIDs) {
-      console.log('dispatching getSpecies...')
+      console.log('~ dispatching getSpecies...')
       const species = await map(speciesIDs, async id => {
-        // TODO: remake using MovieService
-        const response = await fetch(`https://swapi.co/api/species/${id}/`)
-        return response.json()
+        const { data } = await MovieService.getSpecie(id).catch(error => {
+          console.error('Error in getSpecies API call: ', error)
+        })
+        console.log(`  specie id: ${data.url.slice(-2)[0]} - ${data.name}`)
+        return data
       })
       commit('setSpecies', species)
     }
   }
 })
+// const response = await fetch(`https://swapi.co/api/species/${id}/`)
+// return response.json()

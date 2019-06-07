@@ -4,7 +4,10 @@
     :to="{ name: 'planet-show', params: { id } }"
   >
     <div class="planet-card">
-      <a>{{ planet.name }}</a>
+      <a>
+        {{ planet.name }} /
+        <span>{{ planet.terrain }}</span>
+      </a>
     </div>
   </router-link>
 </template>
@@ -28,5 +31,8 @@ export default {
 }
 a {
   width: 100%;
+}
+span {
+  font-weight: 400;
 }
 </style>

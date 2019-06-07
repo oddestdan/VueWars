@@ -1,5 +1,6 @@
 <template>
   <div class="movie-show">
+    <!-- <h1>Episode #{{ movie.episode_id }} - {{ movie.title }}</h1> -->
     <h1>Episode #{{ movie.episode_id }} - {{ movie.title }}</h1>
     <div class="main-info">
       <h4>Director: {{ movie.director }}</h4>
@@ -14,7 +15,7 @@
     <ul>
       <li>
         <PlanetCard
-          v-for="(planet, i) in filteredPlanets"
+          v-for="(planet, i) in currentMoviePlanets"
           :planet="planet"
           :id="getIDbyURL(planet.url)"
           :key="`planet_${i}`"
@@ -26,7 +27,7 @@
     <ul>
       <li>
         <SpecieCard
-          v-for="(specie, i) in filteredSpecies"
+          v-for="(specie, i) in currentMovieSpecies"
           :specie="specie"
           :id="getIDbyURL(specie.url)"
           :key="`specie_${i}`"
@@ -80,7 +81,7 @@ export default {
 
   data() {
     return {
-      movie: {}
+      // movie: {}
     }
   },
 
@@ -94,17 +95,17 @@ export default {
       'getPlanetsByIDs',
       'getSpeciesByIDs'
     ]),
-    // movie() {
-    // return this.getMovieByID(this.id)
-    // },
-    filteredPlanets() {
+    movie() {
+      return this.getMovieByID(this.id)
+    },
+    currentMoviePlanets() {
       // all current movie's planet IDs
       let planetsIDs = this.movie.planets.map(url => this.getIDbyURL(url))
       return this.planets.filter(planet =>
         planetsIDs.includes(this.getIDbyURL(planet.url))
       )
     },
-    filteredSpecies() {
+    currentMovieSpecies() {
       // all current movie's species IDs
       let speciesIDs = this.movie.species.map(url => this.getIDbyURL(url))
       return this.species.filter(specie =>
@@ -114,10 +115,9 @@ export default {
   },
 
   async created() {
-    console.log(this.$store)
     if (this.movies.length === 0) this.$store.dispatch('getMovies')
 
-    this.movie = this.getMovieByID(this.id)
+    // this.movie = this.getMovieByID(this.id)
     // console.log(this.movie)
 
     let planetsIDs = this.movie.planets
@@ -128,8 +128,8 @@ export default {
       .map(url => this.getIDbyURL(url))
       .filter(id => !this.getAllSpecieIDs.includes(Number(id)))
 
-    if (planetsIDs.length !== 0) this.$store.dispatch('getPlanets', planetsIDs)
-    if (speciesIDs.length !== 0) this.$store.dispatch('getSpecies', speciesIDs)
+    if (planetsIDs.length > 0) this.$store.dispatch('getPlanets', planetsIDs)
+    if (speciesIDs.length > 0) this.$store.dispatch('getSpecies', speciesIDs)
   }
 }
 </script>

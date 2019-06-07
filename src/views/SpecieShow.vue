@@ -12,27 +12,24 @@
 </template>
 
 <script>
-import MovieService from '@/services/MovieService.js'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'specie-show',
 
   props: ['id'],
 
-  data() {
-    return {
-      specie: {}
+  computed: {
+    ...mapState(['species']),
+    ...mapGetters(['getSpecieByID', 'getAllSpeciesByIDs']),
+    specie() {
+      return this.getSpecieByID(this.id)
     }
   },
 
-  created() {
-    MovieService.getSpecie(this.id)
-      .then(response => {
-        this.specie = response.data
-      })
-      .catch(error => {
-        console.log('There was an error in SpecieShow API call: ', error)
-      })
+  async created() {
+    if (this.specie === undefined)
+      await this.$store.dispatch('getSpecies', [this.id])
   }
 }
 </script>

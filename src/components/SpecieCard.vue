@@ -4,7 +4,10 @@
     :to="{ name: 'specie-show', params: { id } }"
   >
     <div class="specie-card">
-      <a>{{ specie.name }}</a>
+      <a>
+        {{ specie.name }} /
+        <span>{{ specie.classification }}</span>
+      </a>
     </div>
   </router-link>
 </template>
@@ -28,5 +31,8 @@ export default {
 }
 a {
   width: 100%;
+}
+span {
+  font-weight: 400;
 }
 </style>
