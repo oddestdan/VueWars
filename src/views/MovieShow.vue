@@ -1,66 +1,51 @@
 <template>
   <div class="movie-show">
-    <!-- <h1>Episode #{{ movie.episode_id }} - {{ movie.title }}</h1> -->
-    <h1>Episode #{{ movie.episode_id }} - {{ movie.title }}</h1>
-    <div class="main-info">
-      <h4>Director: {{ movie.director }}</h4>
-      <h4>Produced by: {{ movie.producer }}</h4>
-      <h4>Release date: {{ movie.release_date }}</h4>
+    <div class="movie-wrapper" v-if="!isLoading">
+      <h1>Episode #{{ movie.episode_id }} - {{ movie.title }}</h1>
+      <div class="main-info">
+        <h4>Director: {{ movie.director }}</h4>
+        <h4>Produced by: {{ movie.producer }}</h4>
+        <h4>Release date: {{ movie.release_date }}</h4>
+      </div>
+      <div class="description">
+        <p>{{ movie.opening_crawl }}</p>
+      </div>
     </div>
-    <div class="description">
-      <p>{{ movie.opening_crawl }}</p>
+
+    <div class="planets-species-wrapper" v-if="!isLoading">
+      <h3>Planets</h3>
+      <ul>
+        <li>
+          <PlanetCard
+            v-for="(planet, i) in currentMoviePlanets"
+            :planet="planet"
+            :id="getIDbyURL(planet.url)"
+            :key="`planet_${i}`"
+          />
+        </li>
+      </ul>
+
+      <h3>Species</h3>
+      <ul>
+        <li>
+          <SpecieCard
+            v-for="(specie, i) in currentMovieSpecies"
+            :specie="specie"
+            :id="getIDbyURL(specie.url)"
+            :key="`specie_${i}`"
+          />
+        </li>
+      </ul>
     </div>
 
-    <h3>Planets</h3>
-    <ul>
-      <li>
-        <PlanetCard
-          v-for="(planet, i) in currentMoviePlanets"
-          :planet="planet"
-          :id="getIDbyURL(planet.url)"
-          :key="`planet_${i}`"
-        />
-      </li>
-    </ul>
-
-    <h3>Species</h3>
-    <ul>
-      <li>
-        <SpecieCard
-          v-for="(specie, i) in currentMovieSpecies"
-          :specie="specie"
-          :id="getIDbyURL(specie.url)"
-          :key="`specie_${i}`"
-        />
-      </li>
-    </ul>
-
-    <h3>Characters</h3>
+    <!-- <h3>Characters</h3>
     <ul>
       <li v-for="(char, i) in movie.characters" :key="`char_${i}`">
         <a :href="`/characters/${i}`"
           >Character {{ char.match(/\d/g).join('') }}</a
         >
       </li>
-    </ul>
-
-    <h3>Starships</h3>
-    <ul>
-      <li v-for="(ship, i) in movie.starships" :key="`ship_${i}`">
-        <a :href="`/starships/${i}`"
-          >Starship {{ ship.match(/\d/g).join('') }}</a
-        >
-      </li>
-    </ul>
-
-    <h3>Vehicles</h3>
-    <ul>
-      <li v-for="(vehicle, i) in movie.vehicles" :key="`vehicle_${i}`">
-        <a :href="`/vehicles/${i}`"
-          >Vehicle {{ vehicle.match(/\d/g).join('') }}</a
-        >
-      </li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 
@@ -74,15 +59,13 @@ export default {
 
   props: ['id'],
 
+  data: () => ({
+    isLoading: false
+  }),
+
   components: {
     PlanetCard,
     SpecieCard
-  },
-
-  data() {
-    return {
-      // movie: {}
-    }
   },
 
   computed: {
@@ -90,46 +73,57 @@ export default {
     ...mapGetters([
       'getIDbyURL',
       'getMovieByID',
-      'getAllPlanetIDs',
-      'getAllSpecieIDs',
+      'getAllPlanetsIDs',
+      'getAllSpeciesIDs',
       'getPlanetsByIDs',
       'getSpeciesByIDs'
     ]),
     movie() {
       return this.getMovieByID(this.id)
     },
+
     currentMoviePlanets() {
-      // all current movie's planet IDs
-      let planetsIDs = this.movie.planets.map(url => this.getIDbyURL(url))
       return this.planets.filter(planet =>
-        planetsIDs.includes(this.getIDbyURL(planet.url))
+        // this.movie.planets
+        // .map(url => this.getIDbyURL(url))
+        // .includes(this.getIDbyURL(planet.url))
+        this.movie.planets.includes(planet.url)
       )
     },
     currentMovieSpecies() {
-      // all current movie's species IDs
-      let speciesIDs = this.movie.species.map(url => this.getIDbyURL(url))
       return this.species.filter(specie =>
-        speciesIDs.includes(this.getIDbyURL(specie.url))
+        this.movie.species.includes(specie.url)
+      )
+    },
+
+    currentMoviePlanetsIDs() {
+      return this.movie.planets.map(url => Number(this.getIDbyURL(url)))
+    },
+    currentMovieSpeciesIDs() {
+      return this.movie.species.map(url => Number(this.getIDbyURL(url)))
+    },
+
+    unpresentPlanetsIDs() {
+      return this.currentMoviePlanetsIDs.filter(
+        id => !this.getAllPlanetsIDs.includes(id)
+      )
+    },
+    unpresentSpeciesIDs() {
+      return this.currentMovieSpeciesIDs.filter(
+        id => !this.getAllSpeciesIDs.includes(id)
       )
     }
   },
 
   async created() {
-    if (this.movies.length === 0) this.$store.dispatch('getMovies')
-
-    // this.movie = this.getMovieByID(this.id)
-    // console.log(this.movie)
-
-    let planetsIDs = this.movie.planets
-      .map(url => this.getIDbyURL(url))
-      .filter(id => !this.getAllPlanetIDs.includes(Number(id)))
-
-    let speciesIDs = this.movie.species
-      .map(url => this.getIDbyURL(url))
-      .filter(id => !this.getAllSpecieIDs.includes(Number(id)))
-
-    if (planetsIDs.length > 0) this.$store.dispatch('getPlanets', planetsIDs)
-    if (speciesIDs.length > 0) this.$store.dispatch('getSpecies', speciesIDs)
+    if (this.movies.length === 0) {
+      this.isLoading = !this.isLoading
+      await this.$store.dispatch('getMovies')
+      this.isLoading = !this.isLoading
+    }
+    // await ...
+    this.$store.dispatch('getPlanets', this.unpresentPlanetsIDs)
+    this.$store.dispatch('getSpecies', this.unpresentSpeciesIDs)
   }
 }
 </script>

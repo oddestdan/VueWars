@@ -1,12 +1,20 @@
 <template>
-  <div class="specie-show">
+  <div class="specie-show" v-if="!isLoading">
     <h1>Specie {{ specie.name }}</h1>
     <p>Language: {{ specie.language }}</p>
     <div class="main-info">
-      <h4>Classification: {{ specie.classification }}</h4>
-      <h4>Designation: {{ specie.designation }}</h4>
-      <h4>Average lifespan: {{ specie.average_lifespan }}</h4>
-      <h4>Average height: {{ specie.average_height }}</h4>
+      <h4>
+        Classification: <span>{{ specie.classification }}</span>
+      </h4>
+      <h4>
+        Designation: <span>{{ specie.designation }}</span>
+      </h4>
+      <h4>
+        Average lifespan: <span>{{ specie.average_lifespan }}</span>
+      </h4>
+      <h4>
+        Average height: <span>{{ specie.average_height }}</span>
+      </h4>
     </div>
   </div>
 </template>
@@ -19,6 +27,10 @@ export default {
 
   props: ['id'],
 
+  data: () => ({
+    isLoading: false
+  }),
+
   computed: {
     ...mapState(['species']),
     ...mapGetters(['getSpecieByID', 'getAllSpeciesByIDs']),
@@ -28,8 +40,11 @@ export default {
   },
 
   async created() {
-    if (this.specie === undefined)
+    if (this.specie === undefined) {
+      this.isLoading = !this.isLoading
       await this.$store.dispatch('getSpecies', [this.id])
+      this.isLoading = !this.isLoading
+    }
   }
 }
 </script>

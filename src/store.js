@@ -6,9 +6,7 @@ import MovieService from '@/services/MovieService.js'
 
 Vue.use(Vuex)
 
-// function URLtoID(url) {
-// return url.match(/\d/g).join('')
-// }
+// helper function that is used a lot throughout the app
 let URLtoID = url => url.match(/\d/g).join('')
 
 export default new Vuex.Store({
@@ -33,9 +31,9 @@ export default new Vuex.Store({
     getSpeciesByIDs: state => ids =>
       state.species.filter(specie => ids.includes(URLtoID(specie.url))),
 
-    getAllPlanetIDs: state =>
+    getAllPlanetsIDs: state =>
       state.planets.map(planet => Number(URLtoID(planet.url))),
-    getAllSpecieIDs: state =>
+    getAllSpeciesIDs: state =>
       state.species.map(specie => Number(URLtoID(specie.url)))
   },
 
@@ -51,13 +49,15 @@ export default new Vuex.Store({
     async getMovies({ commit }) {
       console.log('~ dispatching getMovies...')
       // const { data: { results } } = await axios...
-      const movies = await MovieService.getMovies().catch(error => {
+      const {
+        data: { results }
+      } = await MovieService.getMovies().catch(error => {
         console.error('Error in getMovies API call: ', error)
       })
-      for (let movie of movies.data.results)
+      for (let movie of results)
         console.log(`movie id: ${movie.url.slice(-2)[0]} - ${movie.title}`)
 
-      commit('setMovies', movies.data.results)
+      commit('setMovies', results)
     },
 
     async getPlanets({ commit }, planetsIDs) {

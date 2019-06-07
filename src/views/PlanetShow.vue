@@ -1,13 +1,23 @@
 <template>
-  <div class="planet-show">
+  <div class="planet-show" v-if="!isLoading">
     <h1>Planet {{ planet.name }}</h1>
     <p>Population: {{ planet.population }}</p>
     <div class="main-info">
-      <h4>Climate: {{ planet.climate }}</h4>
-      <h4>Gravity: {{ planet.gravity }}</h4>
-      <h4>Terrain: {{ planet.terrain }}</h4>
-      <h4>Rotation period: {{ planet.rotation_period }}</h4>
-      <h4>Orbital period: {{ planet.orbital_period }}</h4>
+      <h4>
+        Climate: <span>{{ planet.climate }}</span>
+      </h4>
+      <h4>
+        Gravity: <span>{{ planet.gravity }}</span>
+      </h4>
+      <h4>
+        Terrain: <span>{{ planet.terrain }}</span>
+      </h4>
+      <h4>
+        Rotation period: <span>{{ planet.rotation_period }}</span>
+      </h4>
+      <h4>
+        Orbital period: <span>{{ planet.orbital_period }}</span>
+      </h4>
     </div>
     <!-- <h3>Residents</h3>
     <ul>
@@ -28,6 +38,10 @@ export default {
 
   props: ['id'],
 
+  data: () => ({
+    isLoading: false
+  }),
+
   computed: {
     ...mapState(['planets']),
     ...mapGetters(['getPlanetByID', 'getAllPlanetsByIDs']),
@@ -37,8 +51,11 @@ export default {
   },
 
   async created() {
-    if (this.planet === undefined)
+    if (this.planet === undefined) {
+      this.isLoading = !this.isLoading
       await this.$store.dispatch('getPlanets', [this.id])
+      this.isLoading = !this.isLoading
+    }
   }
 }
 </script>
@@ -47,9 +64,8 @@ export default {
 .main-info {
   border-top: 1px solid #aaaaaa;
 }
-h3 {
-  border-top: 1px solid #aaaaaa;
-  padding-top: 10px;
+span {
+  font-weight: 400;
 }
 ul {
   margin: 0;
