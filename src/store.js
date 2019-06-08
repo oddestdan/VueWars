@@ -34,7 +34,10 @@ export default new Vuex.Store({
     getAllPlanetsIDs: state =>
       state.planets.map(planet => Number(URLtoID(planet.url))),
     getAllSpeciesIDs: state =>
-      state.species.map(specie => Number(URLtoID(specie.url)))
+      state.species.map(specie => Number(URLtoID(specie.url))),
+
+    getOrderedMovies: state =>
+      state.movies.sort((a, b) => URLtoID(a.url) - URLtoID(b.url))
   },
 
   mutations: {

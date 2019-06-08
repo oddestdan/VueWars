@@ -2,7 +2,7 @@
   <div class="movie-list">
     <h1>Star Wars Filmography</h1>
     <MovieCard
-      v-for="(movie, i) in movies"
+      v-for="(movie, i) in getOrderedMovies"
       :movie="movie"
       :id="getIDbyURL(movie.url)"
       :key="`movie_${i}`"
@@ -23,7 +23,7 @@ export default {
 
   computed: {
     ...mapState(['movies']),
-    ...mapGetters(['getIDbyURL'])
+    ...mapGetters(['getIDbyURL', 'getOrderedMovies'])
   },
 
   async created() {

@@ -53,9 +53,8 @@ export default {
 .main-info {
   border-top: 1px solid #aaaaaa;
 }
-h3 {
-  border-top: 1px solid #aaaaaa;
-  padding-top: 10px;
+span {
+  font-weight: 400;
 }
 ul {
   margin: 0;

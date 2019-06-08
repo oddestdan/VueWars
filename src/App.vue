@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :style="{ backgroundImage: `url('${background}')` }">
     <div id="nav">
       <div class="router-link-wrapper">
         <router-link :to="{ name: 'movie-list' }">Movie List</router-link>
@@ -8,6 +8,15 @@
     <router-view />
   </div>
 </template>
+
+<script>
+import background from '@/assets/background2.png'
+export default {
+  data: () => ({
+    background
+  })
+}
+</script>
 
 <style lang="scss">
 #app {
@@ -26,6 +35,11 @@
   padding: 30px;
   justify-content: center;
   display: flex;
+}
+.bg-image {
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
 .router-link-wrapper {
   padding: 0 10px;
