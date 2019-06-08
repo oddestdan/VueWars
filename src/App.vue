@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link :to="{ name: 'movie-list' }">List</router-link>
+      <div class="router-link-wrapper">
+        <router-link :to="{ name: 'movie-list' }">Movie List</router-link>
+      </div>
     </div>
     <router-view />
   </div>
@@ -12,12 +14,35 @@
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  margin: 0 5%;
-  color: #2c3e50;
+  padding: 0 5% 40px 5%;
+  color: #e2d1c0; /* 2c3e50 */
+  background-image: url(./assets/background2.png);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 #nav {
   padding: 30px;
-  text-align: center;
+  justify-content: center;
+  display: flex;
+}
+.router-link-wrapper {
+  padding: 0 10px;
+  transition: all 0.3s linear;
+  border-bottom: 2px solid transparent;
+  a {
+    font-size: 18px;
+    color: #f7eee5;
+    transition: all 0.2s linear;
+    text-decoration: none;
+  }
+  &:hover {
+    a {
+      color: #6ecfa4;
+    }
+    border-bottom: 2px solid #6ecfa4;
+  }
 }
 p,
 ul {
@@ -26,7 +51,8 @@ ul {
 }
 a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #e2d1c0;
+  transition: all 0.1s linear;
   &:active {
     color: #5adaa0;
   }

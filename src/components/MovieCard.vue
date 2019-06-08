@@ -23,10 +23,12 @@ export default {
 <style lang="scss" scoped>
 .movie-card {
   padding: 15px 30px;
-  margin-bottom: 15px;
+  margin-top: 15px;
   transition: all 0.2s linear;
   cursor: pointer;
   &:hover {
+    background-color: #af91742d;
+    color: #42b983;
     transform: scale(1.01);
     box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.2), 0 1px 15px 0 rgba(0, 0, 0, 0.2);
   }
@@ -35,7 +37,7 @@ export default {
   }
 }
 .movie-link {
-  color: #2c3e50;
+  color: #e2d1c0;
   text-decoration: none;
   font-weight: 100;
 }
